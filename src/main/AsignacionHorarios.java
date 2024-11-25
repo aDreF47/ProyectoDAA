@@ -34,7 +34,7 @@ public class AsignacionHorarios extends Application {
         primaryStage.setTitle("Login"); 
         primaryStage.setScene(scene); // muestra la escena internamente
         primaryStage.show();
-        
+        System.out.println("HOla mundo cruel");
             
     }
 
