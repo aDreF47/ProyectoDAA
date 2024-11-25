@@ -4,10 +4,12 @@
  */
 package models;
 
-/**
- *
- * @author nando
- */
+import java.util.List;
+
+
 public class Horario {
-    
+    private List<Curso> cursos;
+    private List<Docente> docentes;
+    private List<Aula> aulas;
+    private Estudiante estudiante;
 }

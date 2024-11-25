@@ -1,13 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
-/**
- *
- * @author nando
- */
 public class Curso {
+    private String codigo;
+    private String nombre;
+    private int maxAlumnos;
+    private int horasSemana;
+    private String seccion;
+    private int creditos;
+    private Ciclo ciclo;
+    
+    
+    
     
 }

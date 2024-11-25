@@ -9,5 +9,5 @@ package models;
  * @author nando
  */
 public enum Ciclo {
-    
+    UNO, DOS, TRES, CUATRO, CINCO, SEIS, SIETE, OCHO, NUEVE, DIEZ;
 }
