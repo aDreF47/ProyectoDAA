@@ -7,129 +7,107 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1110.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DocenteController">
-   <top>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Button mnemonicParsing="false" text="Disponibilidad" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="GenerarHorario" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="Reporte" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DOCENTE" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="Salir" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-         </children>
-      </GridPane>
-   </top>
-   <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
+<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DocenteController">
+    <!-- Top Section -->
+    <top>
+        <HBox spacing="15.0" style="-fx-padding: 10; -fx-background-color: #0078D7;">
+            <Text style="-fx-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="DOCENTE" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#DisponibilidadAction" style="-fx-background-color: #005A9E; -fx-text-fill: white;" text="Disponibilidad" />
+            <Button onAction="#HorarioAction" style="-fx-background-color: #005A9E; -fx-text-fill: white;" text="Horario" />
+            <Button onAction="#ReporteAction" style="-fx-background-color: #005A9E; -fx-text-fill: white;" text="Reporte" />
+            <Button onAction="#SalirAction" style="-fx-background-color: #D9534F; -fx-text-fill: white;" text="Salir" />
+        </HBox>
+    </top>
+    
+    <!-- Left Section -->
+    <left>
+        <VBox prefWidth="250.0" spacing="10.0" style="-fx-padding: 10; -fx-background-color: #F4F4F4;">
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-         </children>
-      </VBox>
-   </left>
-   <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab text="Disponibilidad">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <HBox prefHeight="319.0" prefWidth="476.0">
-                           <children>
-                              <VBox prefHeight="319.0" prefWidth="180.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                                    <TableView prefHeight="200.0" prefWidth="200.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
-                                      </columns>
-                                    </TableView>
-                                    <Button mnemonicParsing="false" text="Elegir" />
-                                 </children>
-                              </VBox>
-                              <VBox prefHeight="319.0" prefWidth="146.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                                    <TableView prefHeight="200.0" prefWidth="200.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                      </columns>
-                                    </TableView>
-                                    <HBox prefHeight="41.0" prefWidth="100.0">
-                                       <children>
-                                          <Button mnemonicParsing="false" text="Editar" />
-                                          <Button mnemonicParsing="false" text="Borrar" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <VBox prefHeight="319.0" prefWidth="144.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Días disponible:" />
-                                    <TextField />
-                                    <HBox prefHeight="31.0" prefWidth="100.0">
-                                       <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="De: " />
-                                          <TextField />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="31.0" prefWidth="100.0">
-                                       <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hasta: " />
-                                          <TextField />
-                                       </children>
-                                    </HBox>
-                                    <Button mnemonicParsing="false" text="Agregar" />
-                                    <Button mnemonicParsing="false" text="Generar Horario" />
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-          <Tab text="GenerarHorario">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-            <Tab text="Reporte">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
+            <Text style="-fx-font-size: 16px;" text="Nombre:" />
+            <Text style="-fx-font-size: 16px;" text="Código:" />
+            <Text style="-fx-font-size: 16px;" text="Correo:" />
+        </VBox>
+    </left>
+    
+    <!-- Center Section -->
+    <center>
+        <TabPane style="-fx-padding: 10;" tabClosingPolicy="UNAVAILABLE">
+            <!-- Tab 1: Disponibilidad -->
+            <Tab text="Disponibilidad">
+                <VBox spacing="15.0" style="-fx-padding: 15;">
+                    <HBox spacing="20.0">
+                        <!-- Cursos Disponibles -->
+                        <VBox spacing="10.0">
+                            <Text style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Cursos disponibles" />
+                            <TableView>
+                                <columns>
+                                    <TableColumn prefWidth="100.0" text="C1" />
+                                    <TableColumn prefWidth="100.0" text="C2" />
+                                </columns>
+                            </TableView>
+                            <Button onAction="#ElegirCursoAction" style="-fx-background-color: #0078D7; -fx-text-fill: white;" text="Elegir" />
+                        </VBox>
+                        
+                        <!-- Cursos Elegidos -->
+                        <VBox spacing="10.0">
+                            <Text style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Cursos elegidos" />
+                            <TableView>
+                                <columns>
+                                    <TableColumn prefWidth="100.0" text="C1" />
+                                </columns>
+                            </TableView>
+                            <HBox spacing="10.0">
+                                <Button onAction="#EditarCursoAction" style="-fx-background-color: #FFC107; -fx-text-fill: white;" text="Editar" />
+                                <Button onAction="#BorrarCursoAction" style="-fx-background-color: #D9534F; -fx-text-fill: white;" text="Borrar" />
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Días Disponibles -->
+                        <VBox spacing="10.0">
+                            <Text style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Días disponibles:" />
+                            <TextField promptText="Día (e.g., Lunes)" />
+                            <HBox spacing="5.0">
+                                <Text text="De:" />
+                                <TextField promptText="Hora inicio" />
+                            </HBox>
+                            <HBox spacing="5.0">
+                                <Text text="Hasta:" />
+                                <TextField promptText="Hora fin" />
+                            </HBox>
+                            <Button onAction="#AgregarDisponibilidadAction" style="-fx-background-color: #28A745; -fx-text-fill: white;" text="Agregar" />
+                            <Button onAction="#GenerarHorarioAction" style="-fx-background-color: #0078D7; -fx-text-fill: white;" text="Generar Horario" />
+                        </VBox>
+                    </HBox>
+                </VBox>
             </Tab>
-        </tabs>
-      </TabPane>
-   </center>
-   <bottom>
-      <HBox prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-   </bottom>
+            
+            <!-- Tab 2: Horario Generado -->
+            <Tab text="Horario Generado">
+                <VBox spacing="10.0" style="-fx-padding: 15;">
+                    <Text style="-fx-font-size: 14px;" text="Aquí se mostrará el horario generado." />
+                </VBox>
+            </Tab>
+            
+            <!-- Tab 3: Reporte -->
+            <Tab text="Reporte">
+                <VBox spacing="10.0" style="-fx-padding: 15;">
+                    <Text style="-fx-font-size: 14px;" text="Aquí se generarán y visualizarán los reportes." />
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+    
+    <!-- Bottom Section -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #F4F4F4;">
+            <Text style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Sistema de Gestión de Horarios - Facultad de Ingeniería" />
+        </HBox>
+    </bottom>
 </BorderPane>

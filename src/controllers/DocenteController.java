@@ -1,5 +1,7 @@
 package controllers;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import models.Docente;
 import models.Persona;
 import models.Sesion;
@@ -29,5 +31,41 @@ public class DocenteController {
         // Configura la interfaz para el docente
         // Por ejemplo, puedes mostrar el nombre del docente en un Label
         System.out.println("Bienvenido, " + docente.getNombre());
+    }
+
+    @FXML
+    private void DisponibilidadAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void HorarioAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void ReporteAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void SalirAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void ElegirCursoAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void EditarCursoAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void BorrarCursoAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void AgregarDisponibilidadAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void GenerarHorarioAction(ActionEvent event) {
     }
 }
