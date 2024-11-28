@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -65,7 +67,6 @@ public class DocenteController {
     private TableColumn<Seccion, String> hastaRepDocente;
     @FXML
     private TableColumn<Curso, String> diaRepDocente;
-    @FXML
     private TableColumn<Curso, String> nombreCursoRepDocente;
     @FXML
     private Button btnDescargarReporte;
@@ -83,8 +84,19 @@ public class DocenteController {
     private TableColumn<Curso, String> colHoraElegido;
 
     private ObservableList<Curso> cursos;
-    
+    @FXML
+    private TextField txtDiaDisponible;
+    @FXML
+    private TextField txtHoraInicio;
+    @FXML
+    private TextField txtHoraFinal;
+    @FXML
+    private TableColumn<?, ?> cursoRepDocente;
+    private List<Seccion> disponibilidades = new ArrayList<>();
+
     public DocenteController() {
+        dbCurso = new DBCursos();
+        dbCurso.inicializarCursos();
     }
 
     public void initialize() {
@@ -103,7 +115,6 @@ public class DocenteController {
                 idnombre.setText(usuarioActual.getNombre());
                 docentecodigo.setText(usuarioActual.getCodigo());
                 docentecorreo.setText(usuarioActual.getCorreo());
-
 
                 this.dbCurso = new DBCursos();
                 this.dbCurso.inicializarCursos();
@@ -229,19 +240,80 @@ public class DocenteController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void AgregarDisponibilidadAction(ActionEvent event) {
+    private int obtenerValorDia(String dia) {
+        switch (dia.toLowerCase()) {
+            case "lunes":
+                return 1;
+            case "martes":
+                return 2;
+            case "miercoles":
+                return 3;
+            case "jueves":
+                return 4;
+            case "viernes":
+                return 5;
+            case "sábado":
+                return 6;
+            case "domingo":
+                return 7;
+            default:
+                System.out.println("Día inválido");
+                return -1; // Retornar un valor inválido si el día no es reconocido
+        }
     }
 
-    // Este método se ejecuta cuando el docente genera el primer horario
+    @FXML
+    private void AgregarDisponibilidadAction(ActionEvent event) {
+        // Validación de los campos
+        if (txtDiaDisponible.getText().isEmpty() || txtHoraInicio.getText().isEmpty() || txtHoraFinal.getText().isEmpty()) {
+            System.out.println("Por favor, completa todos los campos.");
+            return;  // Salir del método si falta algún dato
+        }
+
+        // Obtener el día disponible como texto
+        String diaDisp = txtDiaDisponible.getText();
+
+        // Convertir el nombre del día a un valor numérico (lunes = 1, ..., domingo = 7)
+        int NumeroDia = obtenerValorDia(diaDisp);
+        if (NumeroDia == -1) {
+            System.out.println("Día inválido");
+            return;  // Salir del método si el día es inválido
+        }
+
+        // Obtener la hora de inicio y hora de fin como enteros
+        int horaIni = Integer.parseInt(txtHoraInicio.getText());
+        int horaFin = Integer.parseInt(txtHoraFinal.getText());
+
+        // Validación de horas (por ejemplo, asegurarse de que la hora de inicio sea menor que la hora de fin)
+        if (horaIni >= horaFin) {
+            System.out.println("La hora de inicio debe ser menor que la hora de fin.");
+            return;
+        }
+
+        // Crear una nueva sección (disponibilidad) con los datos ingresados
+        Seccion seccion = new Seccion(0, NumeroDia, horaIni, horaFin);  // Usamos '1' como el número de sección
+
+        // Agregar la sección a la lista de disponibilidades
+        disponibilidades.add(seccion);
+
+        System.out.println("Disponibilidades actuales:");
+        for (Seccion sec : disponibilidades) {
+            System.out.println("Sección " + sec.getNumSecc() + " - Día: " + sec.getDia() + ", Desde: " + sec.getPeriodoI() + ", Hasta: " + sec.getPeriodoF());
+        }
+        // Limpiar los campos de texto después de agregar la disponibilidad
+        txtDiaDisponible.clear();
+        txtHoraInicio.clear();
+        txtHoraFinal.clear();
+    }
+
     @FXML
     private void GenerarHorarioAction() {
-        // Generar el primer horario y mostrarlo en el segundo tab
-        horariosGenerados = generarHorarios(); // Genera los horarios posibles (algoritmos voraces, etc.)
-        if (horariosGenerados.isEmpty()) {
+        boolean horariosGenerados = dbCurso.generarHorario(); // Generar los horarios posibles
+        if (horariosGenerados) {
             mensajeNoMasPropuestas.setVisible(true);
+            System.out.println("hola1");
         } else {
-            mostrarHorario(horariosGenerados.get(indiceHorarioActual));
+            //mostrarHorario(horariosGenerados.get(indiceHorarioActual));
         }
     }
 
@@ -257,6 +329,7 @@ public class DocenteController {
 
     // Mostrar el horario en el contenedor
     private void mostrarHorario(String horario) {
+        System.out.println(horario);
         horarioGeneradoContainer.getChildren().clear();
         Text horarioText = new Text(horario); // Mostrar el horario generado
         horarioGeneradoContainer.getChildren().add(horarioText);
@@ -285,34 +358,33 @@ public class DocenteController {
     }
 
     @FXML
-private void generarReporte(ActionEvent event) {
+    private void generarReporte(ActionEvent event) {
 
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Descargar Reporte de Asignaturas");
-    fileChooser.setInitialFileName("reporte.txt");
-    File file = fileChooser.showSaveDialog(btnDescargarReporte.getScene().getWindow());
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Descargar Reporte de Asignaturas");
+        fileChooser.setInitialFileName("reporte.txt");
+        File file = fileChooser.showSaveDialog(btnDescargarReporte.getScene().getWindow());
 
-    if (file != null) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (Curso curso : tablaReporte.getItems()) {
-                // Verifica que la lista de secciones no esté vacía y que el índice sea válido
-                if (!curso.getSecciones().isEmpty() && indiceHorarioActual >= 0 && indiceHorarioActual < curso.getSecciones().size()) {
-                    Seccion seccion = curso.getSecciones().get(indiceHorarioActual);
-                    writer.write(curso.getCiclo() + "\t" + seccion.getNumSecc() + "\t" + curso.getNombre() + "\t"
-                            + seccion.getPeriodoI() + "\t" + seccion.getPeriodoF() + "\t" + curso.getHorasSemana());
-                    writer.newLine();
+        if (file != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (Curso curso : tablaReporte.getItems()) {
+                    // Verifica que la lista de secciones no esté vacía y que el índice sea válido
+                    if (!curso.getSecciones().isEmpty() && indiceHorarioActual >= 0 && indiceHorarioActual < curso.getSecciones().size()) {
+                        Seccion seccion = curso.getSecciones().get(indiceHorarioActual);
+                        writer.write(curso.getCiclo() + "\t" + seccion.getNumSecc() + "\t" + curso.getNombre() + "\t"
+                                + seccion.getPeriodoI() + "\t" + seccion.getPeriodoF() + "\t" + curso.getHorasSemana());
+                        writer.newLine();
+                    }
                 }
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
-}
-
 
     private void cargarDatosReporte() {
-        
+
         dbCurso.inicializarCursos();
         cursos.addAll(dbCurso.getCursosDisponibles());
 
@@ -329,7 +401,7 @@ private void generarReporte(ActionEvent event) {
         this.hastaRepDocente.setCellValueFactory(new PropertyValueFactory("periodoF"));
         this.diaRepDocente.setCellValueFactory(new PropertyValueFactory("horasSemana"));
     }
-    
+
     @FXML
     private void SalirAction(ActionEvent event) throws IOException {
         /*limpiar todo*/

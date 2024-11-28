@@ -5,13 +5,15 @@ public class Seccion {
     private int NumSecc;
     private int dia;
     private int periodoI;
-    private int periodoF;  
+    private int periodoF; 
+    private boolean asignada;
 
     public Seccion(int NumSecc, int dia, int periodoI, int periodoF) {
         this.NumSecc = NumSecc;
         this.dia = dia;
         this.periodoI = periodoI;
         this.periodoF = periodoF;
+        this.asignada = false;
     }
 
     public int getNumSecc() {
@@ -44,6 +46,14 @@ public class Seccion {
 
     public void setPeriodoF(int periodoF) {
         this.periodoF = periodoF;
+    }
+    
+    public boolean isAsignada() {
+        return asignada;
+    }
+
+    public void setAsignada(boolean asignada) {
+        this.asignada = asignada;
     }
     
 }
