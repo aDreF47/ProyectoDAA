@@ -91,7 +91,20 @@
             <!-- Tab 2: Horario Generado -->
             <Tab text="Horario Generado">
                 <VBox spacing="10.0" style="-fx-padding: 15;">
-                    <Text style="-fx-font-size: 14px;" text="Aquí se mostrará el horario generado." />
+
+                    <!-- Contenedor para mostrar el horario generado -->
+                    <VBox fx:id="horarioGeneradoContainer" spacing="10.0">
+                        <!-- El horario generado se mostrará aquí -->
+                    </VBox>
+
+                    <!-- Botones para generar nuevos horarios -->
+                    <HBox spacing="15.0" alignment="CENTER">
+                        <Button onAction="#GenerarNuevoHorarioAction" style="-fx-background-color: #0078D7; -fx-text-fill: white;" text="Generar nuevo horario" />
+                        <Button onAction="#SeleccionarHorarioAction" style="-fx-background-color: #28A745; -fx-text-fill: white;" text="Seleccionar este horario" />
+                    </HBox>
+
+                    <!-- Mensaje si no hay más propuestas -->
+                    <Text fx:id="mensajeNoMasPropuestas" style="-fx-font-size: 14px; -fx-fill: red;" visible="false" text="No hay más propuestas disponibles." />
                 </VBox>
             </Tab>
             
