@@ -1,14 +1,20 @@
 package controllers;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -18,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.*;
 
@@ -45,21 +52,21 @@ public class DocenteController {
     @FXML
     private Label docentecorreo;
     @FXML
-    private TableView<?> tablaReporte;
+    private TableView<Curso> tablaReporte;
     @FXML
-    private TableColumn<?, ?> cicloRepDocente;
+    private TableColumn<Curso, String> cicloRepDocente;
     @FXML
-    private TableColumn<?, ?> seccionRepDocente;
+    private TableColumn<Seccion, String> seccionRepDocente;
     @FXML
-    private TableColumn<?, ?> cursoRepDocente;
+    private TableColumn<Curso, String> horasRepDocente;
     @FXML
-    private TableColumn<?, ?> horasRepDocente;
+    private TableColumn<Seccion, String> deRepDocente;
     @FXML
-    private TableColumn<?, ?> deRepDocente;
+    private TableColumn<Seccion, String> hastaRepDocente;
     @FXML
-    private TableColumn<?, ?> hastaRepDocente;
+    private TableColumn<Curso, String> diaRepDocente;
     @FXML
-    private TableColumn<?, ?> diaRepDocente;
+    private TableColumn<Curso, String> nombreCursoRepDocente;
     @FXML
     private Button btnDescargarReporte;
     @FXML
@@ -75,10 +82,14 @@ public class DocenteController {
     @FXML
     private TableColumn<Curso, String> colHoraElegido;
 
+    private ObservableList<Curso> cursos;
+    
     public DocenteController() {
     }
 
     public void initialize() {
+
+        cursos = FXCollections.observableArrayList(); // Inicializa la lista de cursos
 
         Persona usuarioActual = Sesion.getInstancia().getUsuarioActual();
 
@@ -93,8 +104,10 @@ public class DocenteController {
                 docentecodigo.setText(usuarioActual.getCodigo());
                 docentecorreo.setText(usuarioActual.getCorreo());
 
+
                 this.dbCurso = new DBCursos();
                 this.dbCurso.inicializarCursos();
+                cargarDatosReporte();
                 this.colCursoDisponible.setCellValueFactory(new PropertyValueFactory("nombre"));
                 this.colHoraDisponible.setCellValueFactory(new PropertyValueFactory("horasSemana"));
                 this.colCursoElegido.setCellValueFactory(new PropertyValueFactory("nombre"));
@@ -114,8 +127,6 @@ public class DocenteController {
     }
 
     private void configurarVistaParaDocente(Docente docente) {
-        // Configura la interfaz para el docente
-        // Por ejemplo, puedes mostrar el nombre del docente en un Label
         System.out.println("Bienvenido, " + docente.getNombre());
     }
 
@@ -157,15 +168,27 @@ public class DocenteController {
         Curso cursoSeleccionado = this.tableCursoDisponible.getSelectionModel().getSelectedItem();
 
         if (cursoSeleccionado != null) {
-            // Mover el curso a los elegidos (esto lo hace tu método en DB)
-            this.dbCurso.moverCursoAElegidos(cursoSeleccionado.getCodigo());
 
-            // Eliminar todas las secciones de ese curso de la lista de cursos disponibles
-            this.dbCurso.eliminarSeccionesCurso(cursoSeleccionado.getNombre());
+            // Calcular la suma de las horas semanales de los cursos elegidos
+            int sumaHoras = dbCurso.getCursosElegidos().stream()
+                    .mapToInt(Curso::getHorasSemana).sum();
+            // Verificar si al agregar el curso se supera el límite de 13 horas
+            if (sumaHoras + cursoSeleccionado.getHorasSemana() > 13) {
+                mostrarMensaje("Límite alcanzado", "No puedes agregar más cursos, la suma de horas semanales no puede superar 13.");
+            } else {
+                // Mover el curso a los elegidos (esto lo hace tu método en DB)
+                this.dbCurso.moverCursoAElegidos(cursoSeleccionado.getCodigo());
+                // Eliminar todas las secciones de ese curso de la lista de cursos disponibles
+                this.dbCurso.eliminarSeccionesCurso(cursoSeleccionado.getNombre());
 
-            // Actualizar las vistas de cursos disponibles y elegidos
-            this.cargarCursosDisponibles();
-            this.cargarCursosElegidos();
+                // Actualizar las vistas de cursos disponibles y elegidos
+                this.cargarCursosDisponibles();
+                this.cargarCursosElegidos();
+
+            }
+        } else {
+            mostrarMensaje("Error", "Por favor, selecciona un curso.");
+
         }
     }
 
@@ -180,6 +203,30 @@ public class DocenteController {
 
     @FXML
     private void BorrarCursoAction(ActionEvent event) {
+        // Obtener el curso seleccionado en la tabla de "Cursos Elegidos"
+        Curso cursoSeleccionado = tableCursoElegido.getSelectionModel().getSelectedItem();
+        if (cursoSeleccionado != null) {
+            // Mover el curso de elegidos a disponibles
+            boolean movido = dbCurso.moverCursoADisponibles(cursoSeleccionado.getCodigo());
+
+            if (movido) {
+                // Actualizar las tablas
+                cargarCursosDisponibles();
+                cargarCursosElegidos();
+            } else {
+                mostrarMensaje("Error", "No se pudo mover el curso a la lista de disponibles.");
+            }
+        } else {
+            mostrarMensaje("Error", "Por favor, selecciona un curso a quitar.");
+        }
+    }
+
+    private void mostrarMensaje(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML
@@ -238,9 +285,51 @@ public class DocenteController {
     }
 
     @FXML
-    private void generarReporte(ActionEvent event) {
+private void generarReporte(ActionEvent event) {
+
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Descargar Reporte de Asignaturas");
+    fileChooser.setInitialFileName("reporte.txt");
+    File file = fileChooser.showSaveDialog(btnDescargarReporte.getScene().getWindow());
+
+    if (file != null) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Curso curso : tablaReporte.getItems()) {
+                // Verifica que la lista de secciones no esté vacía y que el índice sea válido
+                if (!curso.getSecciones().isEmpty() && indiceHorarioActual >= 0 && indiceHorarioActual < curso.getSecciones().size()) {
+                    Seccion seccion = curso.getSecciones().get(indiceHorarioActual);
+                    writer.write(curso.getCiclo() + "\t" + seccion.getNumSecc() + "\t" + curso.getNombre() + "\t"
+                            + seccion.getPeriodoI() + "\t" + seccion.getPeriodoF() + "\t" + curso.getHorasSemana());
+                    writer.newLine();
+                }
+            }
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+    private void cargarDatosReporte() {
+        
+        dbCurso.inicializarCursos();
+        cursos.addAll(dbCurso.getCursosDisponibles());
+
+        tablaReporte.setItems(cursos);
     }
 
+    private void inicializar() {
+        cursos = FXCollections.observableArrayList();
+
+        this.cicloRepDocente.setCellValueFactory(new PropertyValueFactory("ciclo"));
+        this.seccionRepDocente.setCellValueFactory(new PropertyValueFactory("NumSecc"));
+        this.nombreCursoRepDocente.setCellValueFactory(new PropertyValueFactory("nombre"));
+        this.deRepDocente.setCellValueFactory(new PropertyValueFactory("periodoI"));
+        this.hastaRepDocente.setCellValueFactory(new PropertyValueFactory("periodoF"));
+        this.diaRepDocente.setCellValueFactory(new PropertyValueFactory("horasSemana"));
+    }
+    
     @FXML
     private void SalirAction(ActionEvent event) throws IOException {
         /*limpiar todo*/
