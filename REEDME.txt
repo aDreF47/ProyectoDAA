@@ -1,0 +1,27 @@
+# Sistema de Gestión Académica
+
+Este proyecto es un sistema de gestión académica desarrollado en Java, utilizando JavaFX para la creación de la interfaz gráfica de usuario (GUI). El sistema permite a los usuarios gestionar cursos, horarios y la matrícula de manera sencilla y eficiente.
+
+## Tecnologías utilizadas
+
+- *Java*: El lenguaje principal utilizado para el desarrollo del sistema.
+- *JavaFX*: Utilizado para el desarrollo de la interfaz gráfica de usuario. JavaFX permite la creación de interfaces modernas y visualmente atractivas para aplicaciones de escritorio.
+  
+## Características principales
+
+- *Gestión de disponibilidad de docentes*: Los docentes pueden ingresar su disponibilidad horaria, que luego se utiliza para asignarles cursos de manera eficiente.
+- *Generación automática de horarios*: El sistema genera automáticamente los horarios basados en la disponibilidad de los docentes y los cursos disponibles.
+- *Matrícula de alumnos*: Los alumnos pueden matricularse en cursos y visualizar sus horarios.
+- *Interfaz gráfica amigable*: Usando JavaFX, se proporciona una interfaz intuitiva para facilitar el uso del sistema tanto a docentes como a alumnos.
+
+## Stream Builder para mejor visualización
+
+El sistema utiliza *Stream Builder* para la creación de flujos de datos que mejoran la eficiencia en la manipulación de listas y la creación de objetos complejos. En particular, se emplea para:
+
+- *Filtrar y ordenar listas*: Los docentes y los cursos se gestionan utilizando flujos (Streams) para garantizar que los datos estén organizados correctamente antes de ser presentados en la interfaz gráfica.
+- *Visualización eficiente*: El uso de flujos permite una visualización más fluida y rápida de los datos en la interfaz, aprovechando las características de JavaFX para mostrar la información de manera clara y precisa.
+
+## Instalación
+
+1. Clona este repositorio en tu máquina local:
+   git clone https://github.com/tu-usuario/gestion-academica.git

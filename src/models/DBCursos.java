@@ -278,7 +278,4 @@ public class DBCursos {
         // Filtrar los cursos disponibles eliminando los cursos con el mismo nombre
         this.cursosDisponibles.removeIf(curso -> curso.getNombre().equals(nombreCurso));
     }
-
-    
-
 }

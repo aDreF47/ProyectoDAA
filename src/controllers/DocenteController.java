@@ -316,7 +316,7 @@ public class DocenteController {
             //mostrarHorario(horariosGenerados.get(indiceHorarioActual));
         }
     }
-
+/*
     // Método para generar nuevos horarios (algoritmos de optimización)
     private List<String> generarHorarios() {
         // Lógica para generar los horarios utilizando algoritmos voraces, etc.
@@ -326,7 +326,7 @@ public class DocenteController {
                 "Lunes 9:00 - 11:00, Miércoles 12:00 - 2:00"
         );
     }
-
+*/
     // Mostrar el horario en el contenedor
     private void mostrarHorario(String horario) {
         System.out.println(horario);
